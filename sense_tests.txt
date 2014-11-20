@@ -1,72 +1,39 @@
-DELETE /scielo
+GET /bibliometrics/citation/_search
 
-POST /scielo/_close
-
-POST /scielo/_open
-
-GET /scielo/_warmer
-
-GET /scielo/_settings
-
-GET /scielo/_mapping
-
-PUT /scielo/_mapping/journal?ignore_conflicts=true
+# GRANTED CITATION BY JOURNAL
+GET /bibliometrics/citation/_search?search_type=count
 {
-  "journal": {
-    "properties": { 
-       "collection": {
-          "type": "string"
-       },
-       "id": {
-          "type": "string"
-       },
-       "issn": {
-          "type": "string"
-       },
-      "subject_area": {
-        "type": "string",
-        "index" : "not_analyzed"
+  "query": {
+    "match": {
+      "citing_id": "0102-311X" 
+    }
+  },
+  "aggs": {
+    "citing_source": {
+      "terms": {
+        "field": "citation_source"
       }
     }
   }
 }
 
-GET /scielo/journal/_mapping
-
-PUT /scielo/journal
+# GRANTED CITATION BY JOURNAL And YEAR
+GET /bibliometrics/citation/_search?search_type=count
 {
-  "properties": { 
-    "subject_area": {
-      "type": "string",
-      "index" : "not_analyzed"
+  "query": {
+    "fuzzy": {
+      "citing_id": "0102-311X" 
     }
-  }
-}
-
-GET /scielo/journal/_search
-
-GET /scielo/journal/_search?search_type=count
-{
-  "aggs" : { 
-    "collections" : { 
-      "terms" : {
-        "field" : "collection" 
-      }
-    }
-  }
-}
-
-GET /scielo/journal/_search?search_type=count
-{
-  "aggs" : { 
-    "collections" : { 
-      "terms" : {
-        "field" : "collection" 
+  },
+  "aggs": {
+    "citation_source": {
+      "terms": {
+        "field": "citation_source"
       },
-      "aggs" : {
-        "subject_area_average" : {
-          "terms" : {
-            "field" : "subject_area"
+      "aggs": {
+        "citation_year": {
+          "terms": {
+            "field": "citation_year" 
           }
         }
       }
@@ -74,12 +41,94 @@ GET /scielo/journal/_search?search_type=count
   }
 }
 
-GET /scielo/journal/_search?search_type=count
+# RECEIVED CITATION BY JOURNAL
+GET /bibliometrics/citation/_search?search_type=count
 {
-  "aggs" : { 
-    "subject_areas" : { 
-      "terms" : {
-        "field" : "subject_area"
+  "query": {
+    "match": {
+      "citation_source": "Rev Saude Publica" 
+    }
+  },
+  "aggs": {
+    "citing_source": {
+      "terms": {
+        "field": "citing_full_title"
+      }
+    }
+  }
+}
+
+# RECEIVED CITATION BY JOURNAL 2 VALUES
+GET /bibliometrics/citation/_search?search_type=count
+{
+  "query": {
+    "filtered": {
+      "filter": {
+        "terms": {
+        "citation_source": ["Rev Saude Publica", "Revista de Saúde Pública"]
+        }
+      }
+    }
+  },
+  "aggs": {
+    "citing_source": {
+      "terms": {
+        "field": "citing_source"
+      }
+    }
+  }
+}
+
+# RECEIVED CITATION BY YEAR 2 VALUES
+GET /bibliometrics/citation/_search?search_type=count
+{
+  "query": {
+    "filtered": {
+      "filter": {
+        "terms": {
+        "citation_source": ["Rev Saude Publica", "Revista de Saúde Pública"]
+        }
+      }
+    }
+  },
+  "aggs": {
+    "citing_source": {
+      "terms": {
+        "field": "citing_year"
+      }
+    }
+  }
+}
+
+# RECEIVED CITATION BY JOURNAL FUZZY
+GET /bibliometrics/citation/_search?search_type=count
+{
+  "query": {
+    "fuzzy": {
+      "citation_source": "Rev Saude Publica" 
+    }
+  },
+  "aggs": {
+    "citing_source": {
+      "terms": {
+        "field": "citing_source"
+      }
+    }
+  }
+}
+
+# RECEIVED CITATION BY YEAR FUZZY
+GET /bibliometrics/citation/_search?search_type=count
+{
+  "query": {
+    "fuzzy": {
+      "citation_source": "Rev Saude Publica" 
+    }
+  },
+  "aggs": {
+    "citing_source": {
+      "terms": {
+        "field": "citing_year"
       }
     }
   }
