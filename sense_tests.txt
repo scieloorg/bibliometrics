@@ -1,3 +1,5 @@
+DELETE /bibliometrics
+
 GET /bibliometrics/citation/_search
 
 # GRANTED CITATION BY JOURNAL
@@ -11,7 +13,8 @@ GET /bibliometrics/citation/_search?search_type=count
   "aggs": {
     "citing_source": {
       "terms": {
-        "field": "citation_source"
+        "field": "citation_source",
+        "size": 0
       }
     }
   }
@@ -21,7 +24,7 @@ GET /bibliometrics/citation/_search?search_type=count
 GET /bibliometrics/citation/_search?search_type=count
 {
   "query": {
-    "fuzzy": {
+    "match": {
       "citing_id": "0102-311X" 
     }
   },
@@ -33,7 +36,33 @@ GET /bibliometrics/citation/_search?search_type=count
       "aggs": {
         "citation_year": {
           "terms": {
-            "field": "citation_year" 
+            "field": "citation_year",
+            "size": 0
+          }
+        }
+      }
+    }
+  }
+}
+
+# GRANTED CITATION BY YEAR And JOURNAL
+GET /bibliometrics/citation/_search?search_type=count
+{
+  "query": {
+    "match": {
+      "citing_id": "0102-311X" 
+    }
+  },
+  "aggs": {
+    "citation_year": {
+      "terms": {
+        "field": "citation_year"
+      },
+      "aggs": {
+        "citation_source": {
+          "terms": {
+            "field": "citation_source",
+            "size": 0
           }
         }
       }
@@ -105,13 +134,17 @@ GET /bibliometrics/citation/_search?search_type=count
 {
   "query": {
     "fuzzy": {
-      "citation_source": "Rev Saude Publica" 
+      "citation_source": {
+        "value": "Rev Saude Publica",
+        "fuzziness" : 2
+      }
     }
   },
   "aggs": {
     "citing_source": {
       "terms": {
-        "field": "citing_source"
+        "field": "citing_source",
+        "size": 0
       }
     }
   }
@@ -122,13 +155,17 @@ GET /bibliometrics/citation/_search?search_type=count
 {
   "query": {
     "fuzzy": {
-      "citation_source": "Rev Saude Publica" 
+      "citation_source": {
+        "value": "Rev Saude Publica",
+        "fuzziness" : 2
+      }
     }
   },
   "aggs": {
-    "citing_source": {
+    "citing_year": {
       "terms": {
-        "field": "citing_year"
+        "field": "citing_year",
+         "size": 0
       }
     }
   }
