@@ -169,7 +169,7 @@ def main(from_date=FROM):
                         "type": "string",
                         "index" : "not_analyzed"
                     },
-                    "citing_full_title" {
+                    "citing_full_title": {
                         "type": "string",
                         "index" : "not_analyzed"                    
                     }
