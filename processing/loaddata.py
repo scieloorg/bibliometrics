@@ -168,6 +168,10 @@ def main(from_date=FROM):
                     "citation_type": {
                         "type": "string",
                         "index" : "not_analyzed"
+                    },
+                    "citing_full_title" {
+                        "type": "string",
+                        "index" : "not_analyzed"                    
                     }
                 }
             }
