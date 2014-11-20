@@ -1,0 +1,86 @@
+DELETE /scielo
+
+POST /scielo/_close
+
+POST /scielo/_open
+
+GET /scielo/_warmer
+
+GET /scielo/_settings
+
+GET /scielo/_mapping
+
+PUT /scielo/_mapping/journal?ignore_conflicts=true
+{
+  "journal": {
+    "properties": { 
+       "collection": {
+          "type": "string"
+       },
+       "id": {
+          "type": "string"
+       },
+       "issn": {
+          "type": "string"
+       },
+      "subject_area": {
+        "type": "string",
+        "index" : "not_analyzed"
+      }
+    }
+  }
+}
+
+GET /scielo/journal/_mapping
+
+PUT /scielo/journal
+{
+  "properties": { 
+    "subject_area": {
+      "type": "string",
+      "index" : "not_analyzed"
+    }
+  }
+}
+
+GET /scielo/journal/_search
+
+GET /scielo/journal/_search?search_type=count
+{
+  "aggs" : { 
+    "collections" : { 
+      "terms" : {
+        "field" : "collection" 
+      }
+    }
+  }
+}
+
+GET /scielo/journal/_search?search_type=count
+{
+  "aggs" : { 
+    "collections" : { 
+      "terms" : {
+        "field" : "collection" 
+      },
+      "aggs" : {
+        "subject_area_average" : {
+          "terms" : {
+            "field" : "subject_area"
+          }
+        }
+      }
+    }
+  }
+}
+
+GET /scielo/journal/_search?search_type=count
+{
+  "aggs" : { 
+    "subject_areas" : { 
+      "terms" : {
+        "field" : "subject_area"
+      }
+    }
+  }
+}
