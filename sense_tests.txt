@@ -102,7 +102,7 @@ GET /bibliometrics/citation/_search?search_type=count
   "aggs": {
     "citing_source": {
       "terms": {
-        "field": "citing_source"
+        "field": "citing_full_title"
       }
     }
   }
@@ -143,7 +143,7 @@ GET /bibliometrics/citation/_search?search_type=count
   "aggs": {
     "citing_source": {
       "terms": {
-        "field": "citing_source",
+        "field": "citing_full_title",
         "size": 0
       }
     }
