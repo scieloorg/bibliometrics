@@ -202,6 +202,7 @@ def main(from_date=FROM):
         ES.index(
             index='bibliometrics',
             doc_type='citation',
+            id=document['id'],
             body=document
         )
 
