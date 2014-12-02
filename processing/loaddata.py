@@ -72,7 +72,7 @@ def fmt_citation(document, collection='BR'):
         _id = '_'.join([document.journal.collection_acronym, document.publisher_id, str(citation.index_number)])
         data = {}
 
-        data['_id'] = _id
+        data['id'] = _id
         data['citing_issn'] = document.journal.scielo_issn
         data['citing_id'] = document.publisher_id
         data['citing_full_title'] = document.journal.title
@@ -147,6 +147,10 @@ def main(from_date=FROM):
         "mappings": {
             "citation": {
                 "properties": {
+                    "id": {
+                        "type": "string",
+                        "index" : "not_analyzed"
+                    },
                     "citing_id": {
                         "type": "string",
                         "index" : "not_analyzed"
