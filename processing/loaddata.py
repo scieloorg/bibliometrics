@@ -69,7 +69,9 @@ def fmt_citation(document, collection='BR'):
 
     for citation in document.citations or []:
         data = {}
-        data['citing_id'] = document.journal.scielo_issn
+        data['id'] = u'_'.join([document.journal.collection_acronym, document.publisher_id])
+        data['citing_issn'] = document.journal.scielo_issn
+        data['citing_id'] = document.publisher_id
         data['citing_full_title'] = document.journal.title
         data['citing_year'] = document.publication_date[0:4]
         data['citing_source'] = [document.journal.title, document.journal.abbreviated_title]
@@ -142,6 +144,10 @@ def main(from_date=FROM):
             "citation": {
                 "properties": {
                     "citing_id": {
+                        "type": "string",
+                        "index" : "not_analyzed"
+                    },
+                    "citing_issn": {
                         "type": "string",
                         "index" : "not_analyzed"
                     },

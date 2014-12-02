@@ -1,13 +1,36 @@
 DELETE /bibliometrics
 
+GET /production/journal/_search
+
 GET /bibliometrics/citation/_search
+
+GET /bibliometrics/_mapping
+
+GET /bibliometrics/_settings
+{
+  "index": {
+    "analysis": {
+      "analyzer": {
+        "biblioAnalyzer": {
+          "type": "custom",
+          "tokenizer": "biblioTokenizer1"
+        }
+      },
+      "tokenyzer":{
+        "biblioTokenizer1": {
+          "type": "lowercase"
+        }
+      }
+    }
+  }
+}
 
 # GRANTED CITATION BY JOURNAL
 GET /bibliometrics/citation/_search?search_type=count
 {
   "query": {
     "match": {
-      "citing_id": "0102-311X" 
+      "citing_id": "1519-6984" 
     }
   },
   "aggs": {
@@ -20,12 +43,30 @@ GET /bibliometrics/citation/_search?search_type=count
   }
 }
 
+
+# GRANTED CITATION BY JOURNAL
+GET /bibliometrics/citation/_search?search_type=count
+{
+  "query": {
+    "match": {
+      "citing_id": "1519-6984" 
+    }
+  },
+  "aggs": {
+    "citation_source": {
+      "terms": {
+        "field": "citation_source"
+      }
+    }
+  }
+}
+
 # GRANTED CITATION BY JOURNAL And YEAR
 GET /bibliometrics/citation/_search?search_type=count
 {
   "query": {
     "match": {
-      "citing_id": "0102-311X" 
+      "citing_id": "0034-8910" 
     }
   },
   "aggs": {
@@ -50,7 +91,7 @@ GET /bibliometrics/citation/_search?search_type=count
 {
   "query": {
     "match": {
-      "citing_id": "0102-311X" 
+      "citing_id": "0021-7557" 
     }
   },
   "aggs": {
@@ -75,7 +116,7 @@ GET /bibliometrics/citation/_search?search_type=count
 {
   "query": {
     "match": {
-      "citation_source": "Rev Saude Publica" 
+      "citation_source": "J. Pediatr. (Rio J.)" 
     }
   },
   "aggs": {
@@ -94,7 +135,7 @@ GET /bibliometrics/citation/_search?search_type=count
     "filtered": {
       "filter": {
         "terms": {
-        "citation_source": ["Rev Saude Publica", "Revista de Saúde Pública"]
+        "citation_source": ["Rev. Saúde Pública", "Rev. Saúde públ. (S. Paulo)", "Rev SaúdePúbl S Paulo", "Rev Saude Publica", "Rev. Saúde públ.", "REVISTA DE SAUDE PUBLICA", "Rev Saúde Públ São Paulo", "Rev Saúde públ São Paulo", "Rev Saúde Púb"]
         }
       }
     }
@@ -115,7 +156,7 @@ GET /bibliometrics/citation/_search?search_type=count
     "filtered": {
       "filter": {
         "terms": {
-        "citation_source": ["Rev Saude Publica", "Revista de Saúde Pública"]
+        "citation_source": ["Rev. Saúde Pública", "Rev. Saúde públ. (S. Paulo)", "Rev SaúdePúbl S Paulo", "Rev Saude Publica", "Rev. Saúde públ.", "REVISTA DE SAUDE PUBLICA", "Rev Saúde Públ São Paulo", "Rev Saúde públ São Paulo", "Rev Saúde Púb"]
         }
       }
     }
@@ -135,7 +176,7 @@ GET /bibliometrics/citation/_search?search_type=count
   "query": {
     "fuzzy": {
       "citation_source": {
-        "value": "Rev Saude Publica",
+        "value": "Revista Brasileira de História",
         "fuzziness" : 2
       }
     }
@@ -143,7 +184,7 @@ GET /bibliometrics/citation/_search?search_type=count
   "aggs": {
     "citing_source": {
       "terms": {
-        "field": "citing_full_title",
+        "field": "citation_source",
         "size": 0
       }
     }
@@ -154,11 +195,225 @@ GET /bibliometrics/citation/_search?search_type=count
 GET /bibliometrics/citation/_search?search_type=count
 {
   "query": {
-    "fuzzy": {
-      "citation_source": {
-        "value": "Rev Saude Publica",
-        "fuzziness" : 2
+    "bool": {
+      "should": [
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Revista Saude Publica",
+              "fuzziness" : 3,
+              "max_expansions": 50
+            }
+          }
+        },
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Rev Saude Publica",
+              "fuzziness" : 3,
+              "max_expansions": 50
+            }
+          }
+        },
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Rev de Saude Publica",
+              "fuzziness" : 3,
+              "max_expansions": 50
+            }
+          }
+        },
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Rev Saude Publ",
+              "fuzziness" : 3,
+              "max_expansions": 50
+            }
+          }
+        },
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Revista de Saude Publica",
+              "fuzziness" : 3,
+              "max_expansions": 50
+            }
+          }
+        }
+      ]
+    } 
+  },
+
+      "aggs": {
+        "citing_source": {
+          "terms": {
+            "field": "citation_year",
+             "size": 0
+          }
+        }
       }
+}
+
+# RECEIVED CITATION BY YEAR FUZZY
+GET /bibliometrics/citation/_search?search_type=count
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Revista Saude Publica",
+              "fuzziness" : 3,
+              "max_expansions": 50
+            }
+          }
+        },
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Rev Saude Publica",
+              "fuzziness" : 3,
+              "max_expansions": 50
+            }
+          }
+        },
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Rev Saude Publ",
+              "fuzziness" : 3,
+              "max_expansions": 50
+            }
+          }
+        },
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Revista de Saude Publica",
+              "fuzziness" : 3,
+              "max_expansions": 50
+            }
+          }
+        }
+      ]
+    } 
+  },
+  "aggs": {
+    "citing_year": {
+      "terms": {
+        "field": "citing_source",
+         "size": 0
+      }
+    }
+  }
+}
+
+# CITATION FORMS FOR A SPECIFIC JOURNAL
+GET /bibliometrics/citation/_search?search_type=count
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Braz J Biol",
+              "fuzziness" : 3,
+              "max_expansions": 50
+            }
+          }
+        },
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Braz. J. Biol.",
+              "fuzziness" : 3,
+              "max_expansions": 50
+            }
+          }
+        },
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Brazilian Journal of Biology",
+              "fuzziness" : 3,
+              "max_expansions": 50
+            }
+          }
+        }
+      ]
+    } 
+  },
+  "aggs": {
+    "citing_year": {
+      "terms": {
+        "field": "citation_source",
+         "size": 0
+      }
+    }
+  }
+}
+
+
+# CITATION FORMS FOR A SPECIFIC JOURNAL
+GET /bibliometrics/citation/_search?search_type=count
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Braz J Biol",
+              "fuzziness" : 4,
+              "max_expansions": 50
+            }
+          }
+        },
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Braz. J. Biol.",
+              "fuzziness" : 4,
+              "max_expansions": 50
+            }
+          }
+        },
+        {
+          "fuzzy": {
+            "citation_source": {
+              "value": "Brazilian Journal of Biology",
+              "fuzziness" : 4,
+              "max_expansions": 50
+            }
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "match": {
+          "citation_source": "Brazilian Journal of Ecology"
+          }
+        },
+        {
+          "match": {
+          "citation_source": "Braz J Urol"
+          }
+        },
+        {
+          "match": {
+            "citation_source": "Brazilian Journal of Geology"
+          }
+        },
+        {
+          "match": {
+            "citation_source": "Braz J Ecol"
+          }
+        }
+      ]
     }
   },
   "aggs": {
@@ -166,6 +421,14 @@ GET /bibliometrics/citation/_search?search_type=count
       "terms": {
         "field": "citing_year",
          "size": 0
+      },
+      "aggs": {
+        "citation_year": {
+          "terms": {
+            "field": "citation_source",
+             "size": 0
+          }
+        }
       }
     }
   }
