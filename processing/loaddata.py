@@ -69,7 +69,7 @@ def fmt_citation(document, collection='BR'):
 
     i = 0
     for citation in document.citations or []:
-        _id = [document.journal.collection_acronym, document.publisher_id, citation.index_number]
+        _id = '_'.join([document.journal.collection_acronym, document.publisher_id, citation.index_number])
         data = {}
 
         data['_id'] = _id
@@ -82,7 +82,7 @@ def fmt_citation(document, collection='BR'):
             data['citation_year'] = citation.date[0:4]
         data['citation_source'] = citation.source
         data['citation_type'] = citation.publication_type
-        data['citation_id'] = '_'.join([document.publisher_id, citation.index_number])
+        data['citation_id'] = u'_'.join([document.publisher_id, citation.index_number])
         data['collection'] = document.collection_acronym
 
         yield data
