@@ -69,7 +69,7 @@ def fmt_citation(document, collection='BR'):
 
     i = 0
     for citation in document.citations or []:
-        _id = '_'.join([document.journal.collection_acronym, document.publisher_id, str(citation.index_number)])
+        _id = '_'.join([document.collection_acronym, document.publisher_id, str(citation.index_number)])
         data = {}
 
         data['id'] = _id
