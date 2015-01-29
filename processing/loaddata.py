@@ -82,6 +82,7 @@ def fmt_citation(document, collection='BR'):
             data['citation_year'] = citation.date[0:4]
         data['citation_source'] = citation.source
         data['citation_type'] = citation.publication_type
+        data['citation_issn'] = citation.issn
         data['citation_id'] = u'_'.join([document.publisher_id, str(citation.index_number)])
         data['collection'] = document.collection_acronym
 
@@ -172,6 +173,10 @@ def main(from_date=FROM):
                         "index" : "not_analyzed"
                     },
                     "citation_year": {
+                        "type": "string",
+                        "index" : "not_analyzed"
+                    },
+                    "citation_issn": {
                         "type": "string",
                         "index" : "not_analyzed"
                     },
